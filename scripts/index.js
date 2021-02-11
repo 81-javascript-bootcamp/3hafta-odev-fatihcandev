@@ -1,16 +1,10 @@
 const petsModule = (function() {
-    const petSounds = {
-        bark: "bark",
-        meow: "meow",
-        squawk: "squawk",
-        pikapika: "pikapika"
-    };
     const data = [
         {
             image: "./assets/images/sam.jpg",
             name: "Sam",
             type: "Corgi",
-            sound: petSounds.bark,
+            sound: "bark",
             key: "b",
             soundText: "Bark - type b",
         },
@@ -19,7 +13,7 @@ const petsModule = (function() {
             name: "Mellie",
             type: "Sphynx",
             key: "m",
-            sound: petSounds.meow,
+            sound: "meow",
             soundText: "Meow - type m"
         },
         {
@@ -27,7 +21,7 @@ const petsModule = (function() {
             name: "Selçuk",
             type: "Indian Ring Neck",
             key: "s",
-            sound: petSounds.squawk,
+            sound: "squawk",
             soundText: "Squawk - type s"
         },
         {
@@ -35,7 +29,7 @@ const petsModule = (function() {
             name: "Pikachu",
             type: "Electric Pokemon",
             key: "p",
-            sound: petSounds.pikapika,
+            sound: "pikapika",
             soundText: "Pika pika - type p"
         }
     ];
@@ -49,6 +43,14 @@ const petsModule = (function() {
     function getButtons() {
         return document.querySelectorAll('button');
     }
+
+    function playSound(soundId) {
+        const $soundElement = document.getElementById(soundId);
+        if($soundElement) {
+            $soundElement.play();
+        }
+    }
+
     
     function createPetSoundElement(soundType) {
         const $audioElement = document.createElement('audio');
@@ -83,8 +85,8 @@ const petsModule = (function() {
     }
     
     function appendSoundElementsInHtml() {
-        Object.keys(petSounds).forEach(soundType => {
-            const $audioEl = createPetSoundElement(soundType);
+        data.forEach(pet => {
+            const $audioEl = createPetSoundElement(pet.sound);
             document.body.appendChild($audioEl);
         });
     }
@@ -113,16 +115,15 @@ const petsModule = (function() {
                 changeImage(pet.image);
                 changeBgColor($row);
             });
-        });
+        })
     }
 
     function bindPlaySoundOnKeyDownEvent() {
-        data.forEach(pet => {
+        data.forEach((pet, index) => {
             const { sound: soundId, key: petKey } = pet;
-            document.addEventListener('keydown', function(event) {
+            window.addEventListener('keydown', function(event) {
                 if(event.key === petKey) {
-                    const $soundElement = document.getElementById(soundId);
-                    $soundElement.play();
+                    playSound(soundId);
                 }
             });
         });
@@ -134,8 +135,7 @@ const petsModule = (function() {
             button.addEventListener('click', function (event) {
                 event.stopPropagation();
                 const soundId = this.getAttribute('data-sound');
-                const $soundElement = document.getElementById(soundId);
-                $soundElement.play();
+                playSound(soundId);
             });
         });
     }
